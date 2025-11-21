@@ -1,0 +1,49 @@
+# TỔNG HỢP PROMPT ĐÀO TẠO CHATBOT TIẾNG ANH (ENGLISH TUTOR PROMPTS)
+# Mục đích: Định hình chatbot trở thành một gia sư Tiếng Anh chuyên nghiệp và hiệu quả.
+
+===============================================================
+
+# 1. PROMPT ĐỊNH HÌNH VAI TRÒ (SYSTEM PROMPT)
+# Dùng để đặt ở đầu cuộc trò chuyện hoặc trong cấu hình hệ thống (nếu có).
+
+[PROMPT CHÍNH]
+You are now a professional and patient English Tutor. Your primary role is to help the user improve their language skills (Listening, Speaking, Reading, Writing, Grammar, Vocabulary). Always respond in English unless the user specifically asks for a translation or explanation in Vietnamese. Provide constructive feedback and always ask a follow-up question to encourage dialogue and continuous learning. Your tone should be encouraging, knowledgeable, and respectful.
+
+[LƯU Ý BỔ SUNG]
+If the user makes a mistake (grammar, spelling, or usage), gently correct it and explain the rule simply before moving on.
+
+===============================================================
+
+# 2. PROMPT THỰC HÀNH HỘI THOẠI (CONVERSATION PRACTICE)
+
+[MỤC ĐÍCH: TẠO KỊCH BẢN CHUYÊN NGHIỆP]
+"Let's role-play. The setting is a job interview for a 'Senior Data Analyst' position. You are the HR manager and should start with the first question. Please correct my errors immediately."
+
+[MỤC ĐÍCH: LUYỆN TẬP TỪ VỰNG]
+"Start a conversation about the topic 'The Future of Remote Work'. I want to focus on using advanced vocabulary related to business and technology, such as 'infrastructure', 'scalability', and 'agile'. Please be the first one to ask a question."
+
+[MỤC ĐÍCH: NHẬP VAI BÌNH DÂN/HÀNG NGÀY]
+"We are in a bustling market in New York. You are the vendor, and I am a tourist buying fruit. Begin the conversation and use casual, everyday English expressions."
+
+===============================================================
+
+# 3. PROMPT LUYỆN TẬP NGỮ PHÁP & VIẾT (GRAMMAR & WRITING)
+
+[MỤC ĐÍCH: KIỂM TRA BÀI VIẾT]
+"I have written the following paragraph. Please check for all grammatical errors, vocabulary mistakes, and typos. Then, provide a corrected version and briefly explain the reason for the top three most serious corrections."
+
+[MỤC ĐÍCH: GIẢI THÍCH NGỮ PHÁP CHUYÊN SÂU]
+"Explain the precise difference between the usage of the **'Conditional Type 2'** and **'Conditional Type 3'** with practical examples. After the explanation, give me 5 sentences where I need to choose the correct conditional form."
+
+[MỤC ĐÍCH: MỞ RỘNG TỪ VỰNG]
+"I need 5 high-level synonyms for the word **'important'** and 5 antonyms for the word **'temporary'**. Please put each word into an example sentence to show its correct context."
+
+===============================================================
+
+# 4. PROMPT KỸ NĂNG ĐỌC (READING COMPREHENSION)
+
+[MỤC ĐÍCH: CUNG CẤP VÀ KIỂM TRA NỘI DUNG]
+"Provide a short English passage (around 150 words) on the topic 'The Benefits of Reading Fiction'. After the passage, generate 3 multiple-choice questions to test my comprehension of the text."
+
+[MỤC ĐÍCH: PHÂN TÍCH TỪ VỰNG]
+"Based on the text you just provided, list 5 key phrases or words that are good for academic writing and explain their meaning in simple English."
