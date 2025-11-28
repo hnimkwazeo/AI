@@ -1,157 +1,175 @@
-# AI-Powered Dictation Analysis API
+# AI Chatbot tích hợp Giọng nói
 
-Đây là một microservice backend được xây dựng bằng Python và FastAPI, chuyên cung cấp khả năng phân tích và chẩn đoán lỗi sai trong các bài nghe-chép chính tả tiếng Anh. API này nhận vào bài làm của người dùng và đáp án đúng, sau đó trả về điểm số, chi tiết so sánh, và quan trọng nhất là các giải thích lỗi sai được tạo ra bởi một mô hình AI tùy chỉnh.
+## Tổng quan dự án
 
-## ✨ Tính năng Nổi bật
+Dự án này là một ứng dụng chatbot AI dựa trên web tích hợp Google Gemini AI với các khả năng giọng nói nâng cao. Nó cho phép người dùng tương tác với AI bằng cả văn bản và giọng nói (Speech-to-Text) và nghe phản hồi của AI (Text-to-Speech). Ứng dụng được xây dựng bằng FastAPI cho backend và JavaScript thuần cho frontend, được đóng gói với Docker để dễ dàng triển khai.
 
-* **Chấm điểm & So sánh:** Cung cấp điểm số chính xác và hiển thị chi tiết sự khác biệt (thừa, thiếu, đúng) giữa hai đoạn văn bản.
-* **Giải thích lỗi bằng AI:** Tích hợp một mô hình AI (fine-tuned T5-small) được huấn luyện để:
-    * Xác định các loại lỗi ngữ pháp, chính tả, dấu câu...
-    * Sinh ra một chuỗi giải thích có cấu trúc cho từng lỗi được phát hiện.
-* **API hiệu suất cao:** Xây dựng trên nền tảng FastAPI và Uvicorn/Gunicorn, đảm bảo tốc độ xử lý nhanh và khả năng mở rộng.
-* **Cấu trúc chuyên nghiệp:** Dự án được tổ chức theo từng lớp (API, Services, Schemas, ML Predictors) rõ ràng, dễ bảo trì và phát triển.
+## Tính năng
 
-## 🛠️ Công nghệ Sử dụng
+- **Trò chuyện văn bản**: Giao diện trò chuyện tương tác với hỗ trợ markdown để định dạng văn bản phong phú.
+- **Nhập liệu bằng giọng nói (Speech-to-Text)**: Ghi âm thời gian thực thông qua Web Audio API của trình duyệt, chuyển đổi thành văn bản bằng Google Speech Recognition. Hỗ trợ tiếng Việt và tiếng Anh.
+- **Đầu ra giọng nói (Text-to-Speech)**: Chuyển đổi phản hồi của AI thành giọng nói tiếng Việt tự nhiên bằng Google Text-to-Speech (gTTS).
+- **Giao diện hiện đại**: Thiết kế đáp ứng (responsive) với giao diện sạch sẽ, phản hồi trực quan cho trạng thái ghi âm và điều khiển phát lại âm thanh.
+- **Hỗ trợ Docker**: Ứng dụng được đóng gói hoàn toàn bằng Docker và Docker Compose.
 
-* **Backend:** Python, FastAPI, Gunicorn
-* **Machine Learning / NLP:**
-    * PyTorch
-    * Hugging Face Transformers (cho model T5)
-    * Hugging Face Datasets (để xử lý dữ liệu)
-    * Errant (để gán nhãn lỗi tự động cho dữ liệu huấn luyện)
-    * Spacy
+## Kiến trúc hệ thống
 
-## 🧠 Mô hình AI Tùy chỉnh (Custom AI Model)
+Ứng dụng tuân theo kiến trúc Client-Server tiêu chuẩn:
 
-Điểm nhấn của dự án là một mô hình AI được xây dựng tùy chỉnh để phân tích và giải thích lỗi sai, thay vì chỉ so sánh văn bản đơn thuần.
+1.  **Frontend (Client)**:
+    -   HTML5/CSS3 cho cấu trúc và kiểu dáng.
+    -   JavaScript (ES6+) cho logic.
+    -   Web Audio API để thu tín hiệu micro và xử lý dữ liệu âm thanh.
+    -   Fetch API để giao tiếp bất đồng bộ với backend.
 
-* **Kiến trúc (Architecture):** Mô hình được phát triển dựa trên kiến trúc **Transformer** nổi tiếng, cụ thể là **tinh chỉnh (fine-tuning)** mô hình **T5-small** (Text-to-Text Transfer Transformer) của Google.
+2.  **Backend (Server)**:
+    -   **FastAPI**: Framework web hiệu năng cao để xử lý các yêu cầu HTTP.
+    -   **Google Gemini API**: Mô hình AI tạo sinh để xử lý lời nhắc và tạo phản hồi.
+    -   **SpeechRecognition**: Thư viện chuyển đổi tệp âm thanh WAV thành văn bản.
+    -   **gTTS**: Thư viện chuyển đổi phản hồi văn bản thành âm thanh MP3.
 
-* **Nhiệm vụ (Task):** Mô hình được huấn luyện cho một nhiệm vụ **Sequence-to-Sequence** chuyên biệt: **"Sinh giải thích lỗi có cấu trúc" (Structured Error Explanation Generation)**.
-    * **Đầu vào:** Một chuỗi văn bản chứa cả câu sai của người dùng và câu đúng của đáp án.
-    * **Đầu ra:** Một chuỗi văn bản có cấu trúc, liệt kê các lỗi đã được sửa và phân loại chúng.
+## Công nghệ sử dụng
 
-* **Quy trình Xây dựng (Workflow):**
-    1.  **Chuẩn bị Dữ liệu:** Tự động xử lý và gán nhãn cho **50,000 cặp câu** từ bộ dữ liệu **grammarly/coedit** bằng thư viện **errant** để tạo ra một bộ dữ liệu huấn luyện chất lượng cao.
-    2.  **Huấn luyện (Fine-tuning):** Tinh chỉnh mô hình **t5-small** trên bộ dữ liệu đã được chuẩn bị để dạy cho nó khả năng nhận diện và mô tả các lỗi ngữ pháp.
-    3.  **Tích hợp (Integration):** Đóng gói mô hình đã huấn luyện vào một module **"predictor"** và tích hợp trực tiếp vào business logic của API để cung cấp khả năng phân tích thời gian thực.
+### Backend
+-   **Python 3.11**
+-   **FastAPI**: Web framework.
+-   **Uvicorn**: ASGI server.
+-   **Google Generative AI (Gemini 2.0)**: Nhà cung cấp LLM.
+-   **SpeechRecognition**: Xử lý âm thanh.
+-   **gTTS**: Công cụ chuyển văn bản thành giọng nói.
+-   **Jinja2**: Template engine.
 
-## 📂 Cấu trúc Dự án
+### Frontend
+-   **HTML5 / CSS3**
+-   **JavaScript (Vanilla)**
+-   **Web Audio API**
 
-Dự án được cấu trúc một cách khoa học để phân tách rõ ràng các thành phần:
-```
-dictation_api/
-│
-├── app/
-│   ├── api/              # API endpoints (routers)
-│   ├── ml/               # Machine Learning (training, predictors, models)
-│   ├── schemas/          # Pydantic data models
-│   └── services/         # Business logic
-│
-├── scripts/              # Các script phụ trợ
-├── static/               # File tĩnh (audio...)
-├── .gitignore
-├── Dockerfile            # Công thức để đóng gói ứng dụng
-├── main.py               # File khởi động chính
-└── requirements.txt
-```
+### DevOps
+-   **Docker**
+-   **Docker Compose**
 
-## 🚀 API Endpoint
+## Cấu trúc dự án
 
-### `POST /api/v1/dictation/check`
-
-Endpoint chính để phân tích một bài nghe-chép.
-
-**Request Body:**
-
-```json
-{
-  "user_text": "She dont has many informations.",
-  "correct_text": "She doesn't have much information."
-}
+```text
+chatbot/
+├── main.py                 # Điểm vào ứng dụng chính và các API endpoint
+├── requirements.txt        # Các phụ thuộc Python
+├── Dockerfile              # Cấu hình Docker image
+├── docker-compose.yml      # Cấu hình dịch vụ Docker
+├── .env                    # Biến môi trường (API Keys)
+├── .dockerignore           # Các tệp bị loại trừ khỏi bản build Docker
+├── templates/
+│   └── index.html          # Giao diện người dùng Frontend
+└── README.md               # Tài liệu dự án
 ```
 
-**Success Response (200 OK):**
+## Yêu cầu tiên quyết
 
-```json
-{
-  "score": 60.53,
-  "diffs": [
-    { "type": "equal", "text": "she do" },
-    { "type": "insert", "text": "nt" },
-    { "type": "delete", "text": "esn't" },
-    { "type": "equal", "text": " ha" },
-    { "type": "insert", "text": "s" },
-    { "type": "delete", "text": "ve much" },
-    { "type": "equal", "text": " in" },
-    { "type": "delete", "text": "form" },
-    { "type": "insert", "text": "formation" },
-    { "type": "equal", "text": "s." }
-  ],
-  "explanations": [
-    "Tại 'dont': Lỗi khác (Nên sửa thành 'doesn't')",
-    "Tại 'has': Lỗi dùng sai động từ (Nên sửa thành 'have')",
-    "Tại 'many': Lỗi dùng sai từ hạn định (Nên sửa thành 'much')",
-    "Tại 'informations': Lỗi số ít/số nhiều danh từ (Nên sửa thành 'information')"
-  ]
-}
+-   Python 3.11 trở lên (để phát triển cục bộ)
+-   Docker và Docker Compose (để triển khai container)
+-   Google Gemini API Key
+
+## Cài đặt và Thiết lập
+
+### 1. Cấu hình môi trường
+
+Tạo tệp `.env` trong thư mục gốc và thêm khóa API Google Gemini của bạn:
+
+```env
+GEMINI_API_KEY=your_api_key_here
 ```
 
-## 🏁 Hướng dẫn Cài đặt và Chạy
+### 2. Chạy với Docker (Khuyên dùng)
 
-**Yêu cầu:**
-* Git
-* Python 3.10+
+Xây dựng và khởi động container:
 
-**Các bước cài đặt:**
+```bash
+docker-compose up --build
+```
 
-1.  **Clone repository:**
+Ứng dụng sẽ có sẵn tại `http://localhost:8000`.
+
+Để dừng ứng dụng:
+
+```bash
+docker-compose down
+```
+
+### 3. Chạy cục bộ
+
+1.  Tạo môi trường ảo:
     ```bash
-    git clone https://github.com/DinhDuong1610/4Stars-english-AI.git
-    ```
-
-2.  **Tạo và kích hoạt môi trường ảo:**
-    ```bash
-    # Tạo venv
     python -m venv venv
-    # Kích hoạt venv (trên Windows)
-    .\venv\Scripts\activate
+    source venv/bin/activate  # Trên Windows: venv\Scripts\activate
     ```
 
-3.  **Cài đặt các thư viện:**
+2.  Cài đặt các phụ thuộc:
     ```bash
     pip install -r requirements.txt
     ```
 
-4.  **Tải mô hình ngôn ngữ cho `errant`:**
+    *Lưu ý: Bạn có thể cần cài đặt các phụ thuộc cấp hệ thống cho PyAudio (ví dụ: `portaudio19-dev` trên Linux) nếu gặp lỗi cài đặt.*
+
+3.  Chạy máy chủ:
     ```bash
-    python -m spacy download en_core_web_sm
+    python -m uvicorn main:app --reload
     ```
 
-5.  **(Tùy chọn) Tự huấn luyện model AI:**
-    * *Lưu ý: Các model đã được huấn luyện không được lưu trong repository này. Bạn cần tự huấn luyện chúng. Quá trình này rất tốn thời gian (nhiều giờ) và tài nguyên máy tính.*
-    * **Bước 1: Chuẩn bị dữ liệu:**
-        ```bash
-        python app/ml/training/prepare_explanation_data.py
-        ```
-    * **Bước 2: Huấn luyện model:**
-        ```bash
-        python app/ml/training/train_explanation_generator.py
-        ```
+4.  Truy cập ứng dụng tại `http://localhost:8000`.
 
-6.  **Chạy server:**
-    ```bash
-    uvicorn main:app --reload
-    ```
-    Ứng dụng sẽ chạy tại `http://127.0.0.1:8000`.
-    Truy cập `http://127.0.0.1:8000/docs` để xem tài liệu và thử nghiệm API.
+## Hướng dẫn sử dụng
 
-## 🌐 Dự án Liên quan (Related Project)
-API này được xây dựng để phục vụ như một microservice chuyên biệt cho backend chính của website học tiếng Anh. Backend chính được xây dựng bằng Java Spring Boot.
+### Trò chuyện văn bản
+1.  Nhập tin nhắn của bạn vào trường nhập liệu ở cuối màn hình.
+2.  Nhấn Enter hoặc nhấp vào nút "Gui".
+3.  Phản hồi của AI sẽ xuất hiện trong cửa sổ trò chuyện.
 
-➡️ Link tới dự án Java: https://github.com/DinhDuong1610/4stars-english-BE
+### Nhập liệu bằng giọng nói
+1.  Nhấp vào nút "MIC".
+2.  Cấp quyền truy cập micro nếu trình duyệt yêu cầu.
+3.  Nói câu hỏi của bạn. Nút sẽ thay đổi giao diện để báo hiệu đang ghi âm.
+4.  Nhấp vào nút một lần nữa (có nhãn "STOP") để kết thúc ghi âm.
+5.  Hệ thống sẽ xử lý âm thanh và điền văn bản đã chuyển đổi vào trường nhập liệu.
+6.  Bạn có thể chỉnh sửa văn bản nếu cần trước khi gửi.
 
-## 👤 Tác giả
+### Đầu ra giọng nói
+1.  Sau khi nhận được phản hồi từ AI, nút "Nghe" sẽ xuất hiện bên dưới tin nhắn.
+2.  Nhấp vào nút để nghe phản hồi được đọc to.
+3.  Nút sẽ hiển thị "Dang phat..." trong khi âm thanh đang phát.
 
-* Dương Đính
-* jenny.180820@gmail.com
+## Các API Endpoint
+
+### `GET /`
+Hiển thị giao diện trò chuyện chính.
+
+### `POST /chat`
+Xử lý các lời nhắc văn bản.
+-   **Input**: Form data `prompt` (chuỗi).
+-   **Output**: HTML template với lịch sử trò chuyện đã cập nhật.
+
+### `POST /transcribe`
+Chuyển đổi tệp âm thanh thành văn bản.
+-   **Input**: Multipart form data `audio` (tệp WAV).
+-   **Output**: JSON `{"text": "văn bản đã chuyển đổi"}`.
+
+### `POST /text-to-speech`
+Chuyển đổi văn bản thành âm thanh.
+-   **Input**: JSON `{"text": "văn bản cần đọc"}`.
+-   **Output**: JSON `{"audio": "base64_encoded_mp3"}`.
+
+## Các vấn đề bảo mật
+
+-   **API Keys**: Không bao giờ commit tệp `.env` vào version control. Đảm bảo `GEMINI_API_KEY` được giữ bí mật.
+-   **Tệp tạm thời**: Ứng dụng tạo các tệp WAV và MP3 tạm thời để xử lý. Các tệp này sẽ tự động bị xóa sau khi sử dụng để tránh đầy bộ nhớ và rò rỉ dữ liệu.
+-   **Xác thực đầu vào**: Xác thực cơ bản được thực hiện để đảm bảo lời nhắc không bị trống.
+
+## Khắc phục sự cố
+
+-   **Truy cập Micro**: Đảm bảo trình duyệt của bạn cho phép truy cập micro cho trang web. Điều này thường yêu cầu trang web phải được phục vụ qua HTTPS hoặc `localhost`.
+-   **Lỗi định dạng âm thanh**: Frontend được cấu hình để ghi âm ở tần số 16kHz mono. Nếu bạn gặp lỗi định dạng, hãy đảm bảo trình duyệt của bạn hỗ trợ các ràng buộc Web Audio API được sử dụng trong `index.html`.
+-   **Vấn đề phụ thuộc**: Nếu `pyaudio` không cài đặt được cục bộ, hãy đảm bảo bạn đã cài đặt các công cụ build C++ và header phát triển PortAudio cần thiết trên hệ thống của mình.
+
+## Giấy phép
+
+Dự án này là mã nguồn mở và có sẵn để sửa đổi và phân phối.
+

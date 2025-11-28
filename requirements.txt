@@ -2,7 +2,9 @@ fastapi
 uvicorn[standard]
 python-dotenv
 google-generativeai
-Jinja2
 python-multipart
-markdown
 requests
+SpeechRecognition
+gTTS
+pydantic
+pydub 

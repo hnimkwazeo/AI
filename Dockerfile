@@ -1,9 +1,15 @@
 FROM python:3.11-slim
+
 WORKDIR /code
+
+RUN apt-get update && apt-get install -y flac ffmpeg && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt /code/requirements.txt
-# Cài đặt thư viện
+
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
-# Copy code
+
 COPY . /code/
+
 EXPOSE 8000
+
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
