@@ -2,14 +2,13 @@
 
 ## Tổng quan dự án
 
-Dự án này là một ứng dụng chatbot AI dựa trên web tích hợp Google Gemini AI với các khả năng giọng nói nâng cao. Nó cho phép người dùng tương tác với AI bằng cả văn bản và giọng nói (Speech-to-Text) và nghe phản hồi của AI (Text-to-Speech). Ứng dụng được xây dựng bằng FastAPI cho backend và JavaScript thuần cho frontend, được đóng gói với Docker để dễ dàng triển khai.
+Dự án này là một ứng dụng chatbot AI dựa trên web tích hợp Google Gemini AI với các khả năng giọng nói nâng cao. Nó cho phép người dùng tương tác với AI bằng cả văn bản và giọng nói (Speech-to-Text). Ứng dụng được xây dựng bằng FastAPI cho backend và JavaScript thuần cho frontend, được đóng gói với Docker để dễ dàng triển khai.
 
 ## Tính năng
 
 - **Trò chuyện văn bản**: Giao diện trò chuyện tương tác với hỗ trợ markdown để định dạng văn bản phong phú.
 - **Nhập liệu bằng giọng nói (Speech-to-Text)**: Ghi âm thời gian thực thông qua Web Audio API của trình duyệt, chuyển đổi thành văn bản bằng Google Speech Recognition. Hỗ trợ tiếng Việt và tiếng Anh.
-- **Đầu ra giọng nói (Text-to-Speech)**: Chuyển đổi phản hồi của AI thành giọng nói tiếng Việt tự nhiên bằng Google Text-to-Speech (gTTS).
-- **Giao diện hiện đại**: Thiết kế đáp ứng (responsive) với giao diện sạch sẽ, phản hồi trực quan cho trạng thái ghi âm và điều khiển phát lại âm thanh.
+- **Giao diện hiện đại**: Thiết kế đáp ứng (responsive) với giao diện sạch sẽ, phản hồi trực quan cho trạng thái ghi âm.
 - **Hỗ trợ Docker**: Ứng dụng được đóng gói hoàn toàn bằng Docker và Docker Compose.
 
 ## Kiến trúc hệ thống
@@ -26,7 +25,6 @@ Dự án này là một ứng dụng chatbot AI dựa trên web tích hợp Goog
     -   **FastAPI**: Framework web hiệu năng cao để xử lý các yêu cầu HTTP.
     -   **Google Gemini API**: Mô hình AI tạo sinh để xử lý lời nhắc và tạo phản hồi.
     -   **SpeechRecognition**: Thư viện chuyển đổi tệp âm thanh WAV thành văn bản.
-    -   **gTTS**: Thư viện chuyển đổi phản hồi văn bản thành âm thanh MP3.
 
 ## Công nghệ sử dụng
 
@@ -36,7 +34,6 @@ Dự án này là một ứng dụng chatbot AI dựa trên web tích hợp Goog
 -   **Uvicorn**: ASGI server.
 -   **Google Generative AI (Gemini 2.0)**: Nhà cung cấp LLM.
 -   **SpeechRecognition**: Xử lý âm thanh.
--   **gTTS**: Công cụ chuyển văn bản thành giọng nói.
 -   **Jinja2**: Template engine.
 
 ### Frontend
@@ -132,11 +129,6 @@ docker-compose down
 5.  Hệ thống sẽ xử lý âm thanh và điền văn bản đã chuyển đổi vào trường nhập liệu.
 6.  Bạn có thể chỉnh sửa văn bản nếu cần trước khi gửi.
 
-### Đầu ra giọng nói
-1.  Sau khi nhận được phản hồi từ AI, nút "Nghe" sẽ xuất hiện bên dưới tin nhắn.
-2.  Nhấp vào nút để nghe phản hồi được đọc to.
-3.  Nút sẽ hiển thị "Dang phat..." trong khi âm thanh đang phát.
-
 ## Các API Endpoint
 
 ### `GET /`
@@ -152,15 +144,10 @@ Chuyển đổi tệp âm thanh thành văn bản.
 -   **Input**: Multipart form data `audio` (tệp WAV).
 -   **Output**: JSON `{"text": "văn bản đã chuyển đổi"}`.
 
-### `POST /text-to-speech`
-Chuyển đổi văn bản thành âm thanh.
--   **Input**: JSON `{"text": "văn bản cần đọc"}`.
--   **Output**: JSON `{"audio": "base64_encoded_mp3"}`.
-
 ## Các vấn đề bảo mật
 
 -   **API Keys**: Không bao giờ commit tệp `.env` vào version control. Đảm bảo `GEMINI_API_KEY` được giữ bí mật.
--   **Tệp tạm thời**: Ứng dụng tạo các tệp WAV và MP3 tạm thời để xử lý. Các tệp này sẽ tự động bị xóa sau khi sử dụng để tránh đầy bộ nhớ và rò rỉ dữ liệu.
+-   **Tệp tạm thời**: Ứng dụng tạo các tệp WAV tạm thời để xử lý. Các tệp này sẽ tự động bị xóa sau khi sử dụng để tránh đầy bộ nhớ và rò rỉ dữ liệu.
 -   **Xác thực đầu vào**: Xác thực cơ bản được thực hiện để đảm bảo lời nhắc không bị trống.
 
 ## Khắc phục sự cố
